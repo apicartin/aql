@@ -24,12 +24,13 @@ func ParseFilterToMongo(f string) bson.M {
 	r := d.Decode(f)
 
 	for k, v := range r {
-		cri1 := v[0]
 
+		cri1 := v[0]
 		cond1 := bson.M{mongoOpMap[cri1.Operator]: handleInt64(cri1.Value)}
 		if len(v) == 2 {
 			// and operator
 			cri2 := v[1]
+
 			cond2 := bson.M{mongoOpMap[cri2.Operator]: handleInt64(cri2.Value)}
 			andAr = append(andAr, bson.M{k: cond1})
 			andAr = append(andAr, bson.M{k: cond2})
@@ -43,14 +44,24 @@ func ParseFilterToMongo(f string) bson.M {
 }
 
 func handleInt64(v interface{}) interface{} {
+
 	switch v.(type) {
 	case string:
+
 		n, err := strconv.ParseInt(v.(string), 10, 64)
 		if err == nil {
+
 			if len(v.(string)) == 19 {
 				return n
 			}
 		}
+		break
+	case []interface{}:
+		newArr := []interface{}{}
+		for _, vv := range v.([]interface{}) {
+			newArr = append(newArr, handleInt64(vv))
+		}
+		v = newArr
 	}
 	return v
 }
