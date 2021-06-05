@@ -9,9 +9,11 @@ import (
 
 var d JSONDecoder
 
+//MongoParser -
 type MongoParser struct {
 }
 
+//Parse  -
 func (mp MongoParser) Parse(f string) interface{} {
 	initMap()
 	sqlMap := bson.M{}
@@ -38,6 +40,7 @@ func (mp MongoParser) Parse(f string) interface{} {
 	return sqlMap
 }
 
+//Sort -
 func (mp MongoParser) Sort(f string) interface{} {
 	result := bson.M{}
 	r := make(map[string]string)
