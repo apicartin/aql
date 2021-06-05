@@ -22,23 +22,29 @@ func (jd JSONDecoder) Decode(jsonString string) map[string][]Criteria {
 	if err != nil {
 		log.Errorln(err)
 	}
-	log.Infoln(resultMap)
-	jd.TravereCriteria(&resultMap)
-	return resultMap
-}
-func (jd JSONDecoder) TravereCriteria(m *map[string][]Criteria) {
 
-	for _, v := range *m {
+	return jd.TravereCriteria(&resultMap)
+
+}
+func (jd JSONDecoder) TravereCriteria(m *map[string][]Criteria) map[string][]Criteria {
+	var newMap = make(map[string][]Criteria)
+	for k, v := range *m {
+		newV := []Criteria{}
 		for _, c := range v {
 			jd.TraverseMap(&c)
+			newV = append(newV, c)
 		}
+		newMap[k] = newV
 	}
+	return newMap
+
 }
 
 func (jd JSONDecoder) TraverseMap(m *Criteria) {
 	v := m.Value
 	switch v.(type) {
 	case float32:
+
 		s := fmt.Sprintf("%.0f", v)
 		a, _ := strconv.ParseInt(s, 10, 64)
 		m.Value = a
@@ -46,6 +52,7 @@ func (jd JSONDecoder) TraverseMap(m *Criteria) {
 	case float64:
 		s := fmt.Sprintf("%.0f", v)
 		m.Value, _ = strconv.ParseInt(s, 10, 64)
+
 		break
 	case []interface{}:
 		newAr := jd.TraverseArray(v.([]interface{}))
@@ -54,7 +61,6 @@ func (jd JSONDecoder) TraverseMap(m *Criteria) {
 	default:
 		m.Value = v
 	}
-
 }
 
 func (jd JSONDecoder) TraverseArray(a []interface{}) []interface{} {

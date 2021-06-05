@@ -3,9 +3,17 @@ package aql
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strconv"
 
 	"github.com/iancoleman/strcase"
+	"github.com/sirupsen/logrus"
+)
+
+const (
+	NumberFormatter  = " %s %s %d "
+	StringFormatter  = " %s %s '%s' "
+	DefaultFormatter = " %s %s %v "
 )
 
 //SQLParser -
@@ -13,7 +21,7 @@ type SQLParser struct {
 }
 
 //Parse  to sql based
-func (mp SQLParser) Parse(f string, snakeCase bool) interface{} {
+func (sp SQLParser) Parse(f string, snakeCase bool) interface{} {
 	initSQLMap()
 	sql := ""
 	conditions := []string{}
@@ -25,12 +33,14 @@ func (mp SQLParser) Parse(f string, snakeCase bool) interface{} {
 		}
 
 		cri1 := v[0]
-		cond1 := fmt.Sprintf(sqlOpMap[cri1.Operator], k, handleInt64ForSQL(cri1.Value))
+
+		cond1 := sp.apply(k, cri1)
 		if len(v) == 2 {
 			// and operator
 			cri2 := v[1]
+			logrus.Errorln(cri2)
+			cond2 := sp.apply(k, cri2)
 
-			cond2 := fmt.Sprintf(sqlOpMap[cri2.Operator], k, handleInt64ForSQL(cri2.Value))
 			conditions = append(conditions, cond1+" and "+cond2)
 		} else if len(v) == 1 {
 
@@ -49,7 +59,7 @@ func (mp SQLParser) Parse(f string, snakeCase bool) interface{} {
 }
 
 //Sort -
-func (mp SQLParser) Sort(f string) interface{} {
+func (sp SQLParser) Sort(f string) interface{} {
 	sql := "order by "
 	r := make(map[string]string)
 	err := json.Unmarshal([]byte(f), &r)
@@ -61,6 +71,49 @@ func (mp SQLParser) Sort(f string) interface{} {
 		sql = sql + " " + k + " " + v
 	}
 	return sql
+}
+
+func (sp SQLParser) apply(fieldName string, m Criteria) string {
+
+	formatSt := ""
+	v := handleInt64ForSQL(m.Value)
+	if fieldName == "b" {
+		logrus.Infoln(fieldName)
+		logrus.Infoln(reflect.TypeOf(v))
+	}
+
+	switch v.(type) {
+	case float32:
+		formatSt = NumberFormatter
+		break
+	case float64:
+		formatSt = NumberFormatter
+		break
+	case string:
+		formatSt = StringFormatter
+		break
+	case int64:
+		formatSt = NumberFormatter
+		break
+	case int:
+		formatSt = NumberFormatter
+		break
+	case int16:
+		formatSt = NumberFormatter
+		break
+	case int32:
+		formatSt = NumberFormatter
+		break
+	case bool:
+		formatSt = NumberFormatter
+		break
+	default:
+		formatSt = DefaultFormatter
+	}
+
+	res := fmt.Sprintf(formatSt, fieldName, m.Operator, v)
+
+	return res
 }
 
 func handleInt64ForSQL(v interface{}) interface{} {
