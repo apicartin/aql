@@ -15,14 +15,11 @@ func initMap() {
 	mongoOpMap["nin"] = "$nin"
 }
 func initSQLMap() {
-	sqlOpMap["="] = " %s = %v "
-	sqlOpMap["!="] = " %s != %v "
-	sqlOpMap[">"] = " %s > %v "
-	sqlOpMap["<"] = " %s < %v "
-	sqlOpMap["<>"] = " %s <> %v "
-	sqlOpMap["<="] = " %s <= %v "
-	sqlOpMap[">="] = " %s >= %v "
-	sqlOpMap["in"] = " %s in (%v) "
-	sqlOpMap["nin"] = " not in "
-	sqlOpMap["like"] = " like "
+	sqlOpMap["="] = " %s = '%v' "
+	sqlOpMap["!="] = " %s != '%v' "
+	sqlOpMap[">"] = " %s > '%v' "
+	sqlOpMap["<"] = " %s < '%v' "
+	sqlOpMap["<>"] = " %s <> '%v' "
+	sqlOpMap["<="] = " %s <= '%v' "
+	sqlOpMap[">="] = " %s >= '%v' "
 }
