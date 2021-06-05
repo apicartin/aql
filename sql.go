@@ -4,18 +4,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+
+	"github.com/iancoleman/strcase"
 )
 
-type SqlParser struct {
+//SqlParser -
+type SQLParser struct {
 }
 
-func (mp SqlParser) Parse(f string) interface{} {
+//Parse  to sql based
+func (mp SQLParser) Parse(f string, snakeCase bool) interface{} {
 	initSqlMap()
 	sql := ""
 	conditions := []string{}
 	r := d.Decode(f)
 
 	for k, v := range r {
+		if snakeCase {
+			k = strcase.ToSnake(k)
+		}
 
 		cri1 := v[0]
 		cond1 := fmt.Sprintf(sqlOpMap[cri1.Operator], k, handleInt64ForSql(cri1.Value))
@@ -41,7 +48,7 @@ func (mp SqlParser) Parse(f string) interface{} {
 	return sql
 }
 
-func (mp SqlParser) Sort(f string) interface{} {
+func (mp SQLParser) Sort(f string) interface{} {
 	sql := "order by "
 	r := make(map[string]string)
 	err := json.Unmarshal([]byte(f), &r)
@@ -55,6 +62,7 @@ func (mp SqlParser) Sort(f string) interface{} {
 	return sql
 }
 
+//handleInt64ForSql -
 func handleInt64ForSql(v interface{}) interface{} {
 
 	switch v.(type) {
