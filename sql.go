@@ -8,13 +8,13 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-//SqlParser -
+//SQLParser -
 type SQLParser struct {
 }
 
 //Parse  to sql based
 func (mp SQLParser) Parse(f string, snakeCase bool) interface{} {
-	initSqlMap()
+	initSQLMap()
 	sql := ""
 	conditions := []string{}
 	r := d.Decode(f)
@@ -25,12 +25,12 @@ func (mp SQLParser) Parse(f string, snakeCase bool) interface{} {
 		}
 
 		cri1 := v[0]
-		cond1 := fmt.Sprintf(sqlOpMap[cri1.Operator], k, handleInt64ForSql(cri1.Value))
+		cond1 := fmt.Sprintf(sqlOpMap[cri1.Operator], k, handleInt64ForSQL(cri1.Value))
 		if len(v) == 2 {
 			// and operator
 			cri2 := v[1]
 
-			cond2 := fmt.Sprintf(sqlOpMap[cri2.Operator], k, handleInt64ForSql(cri2.Value))
+			cond2 := fmt.Sprintf(sqlOpMap[cri2.Operator], k, handleInt64ForSQL(cri2.Value))
 			conditions = append(conditions, cond1+" and "+cond2)
 		} else if len(v) == 1 {
 
@@ -48,6 +48,7 @@ func (mp SQLParser) Parse(f string, snakeCase bool) interface{} {
 	return sql
 }
 
+//Sort -
 func (mp SQLParser) Sort(f string) interface{} {
 	sql := "order by "
 	r := make(map[string]string)
@@ -62,8 +63,7 @@ func (mp SQLParser) Sort(f string) interface{} {
 	return sql
 }
 
-//handleInt64ForSql -
-func handleInt64ForSql(v interface{}) interface{} {
+func handleInt64ForSQL(v interface{}) interface{} {
 
 	switch v.(type) {
 	case string:
@@ -80,7 +80,7 @@ func handleInt64ForSql(v interface{}) interface{} {
 	case []interface{}:
 		val := ""
 		for i, vv := range v.([]interface{}) {
-			str1 := fmt.Sprintf("%v", handleInt64ForSql(vv))
+			str1 := fmt.Sprintf("%v", handleInt64ForSQL(vv))
 			if i == len(v.([]interface{}))-1 {
 				val = val + str1
 			} else {
