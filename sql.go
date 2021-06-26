@@ -3,11 +3,10 @@ package aql
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -31,21 +30,22 @@ func (sp SQLParser) Parse(f string, snakeCase bool) interface{} {
 		if snakeCase {
 			k = strcase.ToSnake(k)
 		}
-
-		cri1 := v[0]
-
-		cond1 := sp.apply(k, cri1)
-		if len(v) == 2 {
-			// and operator
-			cri2 := v[1]
-			logrus.Errorln(cri2)
-			cond2 := sp.apply(k, cri2)
-
-			conditions = append(conditions, cond1+" and "+cond2)
-		} else if len(v) == 1 {
-
+		if len(v) == 1 {
+			cri1 := v[0]
+			cond1 := sp.apply(k, cri1)
 			conditions = append(conditions, cond1)
+		} else if len(v) > 1 {
+
+			// add or conditions
+			orConds := []string{}
+			for _, vc := range v {
+				cond := sp.apply(k, vc)
+				orConds = append(orConds, cond)
+			}
+
+			conditions = append(conditions, strings.Join(orConds, " or "))
 		}
+
 	}
 
 	for i, s := range conditions {
@@ -77,10 +77,6 @@ func (sp SQLParser) apply(fieldName string, m Criteria) string {
 
 	formatSt := ""
 	v := handleInt64ForSQL(m.Value)
-	if fieldName == "b" {
-		logrus.Infoln(fieldName)
-		logrus.Infoln(reflect.TypeOf(v))
-	}
 
 	switch v.(type) {
 	case float32:

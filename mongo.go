@@ -22,18 +22,20 @@ func (mp MongoParser) Parse(f string) interface{} {
 
 	for k, v := range r {
 
-		cri1 := v[0]
-		cond1 := bson.M{mongoOpMap[cri1.Operator]: handleInt64(cri1.Value)}
-		if len(v) == 2 {
-			// and operator
-			cri2 := v[1]
-
-			cond2 := bson.M{mongoOpMap[cri2.Operator]: handleInt64(cri2.Value)}
+		if len(v) == 1 {
+			cri1 := v[0]
+			cond1 := bson.M{mongoOpMap[cri1.Operator]: handleInt64(cri1.Value)}
 			andAr = append(andAr, bson.M{k: cond1})
-			andAr = append(andAr, bson.M{k: cond2})
-		} else if len(v) == 1 {
-			andAr = append(andAr, bson.M{k: cond1})
+		} else if len(v) > 1 {
+			// add or conditions
+			orAr := []bson.M{}
+			for _, vc := range v {
+				cond2 := bson.M{mongoOpMap[vc.Operator]: handleInt64(vc.Value)}
+				orAr = append(orAr, bson.M{k: cond2})
+			}
+			andAr = append(andAr, bson.M{"$or": orAr})
 		}
+
 	}
 	sqlMap["$and"] = andAr
 

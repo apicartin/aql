@@ -7,16 +7,16 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// func TestMongoParser(*testing.T) {
-// 	filter := "{\r\n  \"a\": [\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"vinay\"\r\n    },\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"kumar\"\r\n    }\r\n  ],\r\n  \"b\": [\r\n    {\r\n      \"o\": \"!=\",\r\n      \"v\": \"1231231231231231231\"\r\n    }\r\n  ],\r\n  \"c\": [\r\n    {\r\n      \"o\": \"in\",\r\n      \"v\": [\r\n        \"1231231231231231231\",\r\n        \"1231231231231231231\"\r\n      ]\r\n    }\r\n  ]\r\n}"
-// 	m := MongoParser{}.Parse(filter)
-// 	j, err := json.Marshal(m)
-// 	if err == nil {
-// 		logrus.Infoln(string(j))
-// 	}
-// }
+func TestMongoParser(*testing.T) {
+	filter := "{\r\n  \"a\": [\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"vinay\"\r\n    },\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"kumar\"\r\n    }\r\n, {\r\n      \"o\": \"=\",\r\n      \"v\": \"singh\"\r\n    }\r\n  ],\r\n  \"b\": [\r\n    {\r\n      \"o\": \"!=\",\r\n      \"v\": \"1231231231231231231\"\r\n    }\r\n  ],\r\n  \"c\": [\r\n    {\r\n      \"o\": \"in\",\r\n      \"v\": [\r\n        \"1231231231231231231\",\r\n        \"1231231231231231231\"\r\n      ]\r\n    }\r\n  ]\r\n}"
+	m := MongoParser{}.Parse(filter)
+	j, err := json.Marshal(m)
+	if err == nil {
+		logrus.Infoln(string(j))
+	}
+}
 func TestSqlParser(*testing.T) {
-	filter := "{\r\n  \"phoneNo\": [\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": 8882018212\r\n    },\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"kumar\"\r\n    }\r\n  ],\r\n  \"b\": [\r\n    {\r\n      \"o\": \"!=\",\r\n      \"v\": \"1231231231231231231\"\r\n    }\r\n  ],\r\n  \"c\": [\r\n    {\r\n      \"o\": \"in\",\r\n      \"v\": [\r\n        \"1231231231231231231\",\r\n        \"1231231231231231231\"\r\n      ]\r\n    }\r\n  ]\r\n}"
+	filter := "{\r\n  \"phoneNo\": [\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": 8882018212\r\n    },\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"kumar\"\r\n    }\r\n ,{\r\n      \"o\": \"=\",\r\n      \"v\": \"singh\"\r\n    }\r\n  ],\r\n  \"b\": [\r\n    {\r\n      \"o\": \"!=\",\r\n      \"v\": \"1231231231231231231\"\r\n    }\r\n  ],\r\n  \"c\": [\r\n    {\r\n      \"o\": \"in\",\r\n      \"v\": [\r\n        \"1231231231231231231\",\r\n        \"1231231231231231231\"\r\n      ]\r\n    }\r\n  ]\r\n}"
 	m := SQLParser{}.Parse(filter, true)
 	j, err := json.Marshal(m)
 	if err == nil {
@@ -24,29 +24,29 @@ func TestSqlParser(*testing.T) {
 	}
 }
 
-// func TestMongoParserFloat(*testing.T) {
-// 	filter := "{\r\n  \"a\": [\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"vinay\"\r\n    },\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"kumar\"\r\n    }\r\n  ],\r\n  \"b\": [\r\n    {\r\n      \"o\": \"!=\",\r\n      \"v\": \"12\"\r\n    }\r\n  ],\r\n  \"c\": [\r\n    {\r\n      \"o\": \"in\",\r\n      \"v\": [\r\n        2.3,\r\n        4.2\r\n      ]\r\n    }\r\n  ]\r\n}"
-// 	m := MongoParser{}.Parse(filter)
-// 	j, err := json.Marshal(m)
-// 	if err == nil {
-// 		logrus.Infoln(string(j))
-// 	}
-// }
-//
-// func TestSortToSql(*testing.T) {
-// 	sort := "{\"a\":\"asc\",\"b\":\"desc\"}"
-// 	m := SQLParser{}.Sort(sort)
-// 	j, err := json.Marshal(m)
-// 	if err == nil {
-// 		logrus.Infoln(string(j))
-// 	}
-// }
-//
-// func TestSortToMongo(*testing.T) {
-// 	sort := "{\"a\":\"asc\",\"b\":\"desc\"}"
-// 	m := MongoParser{}.Sort(sort)
-// 	j, err := json.Marshal(m)
-// 	if err == nil {
-// 		logrus.Infoln(string(j))
-// 	}
-// }
+func TestMongoParserFloat(*testing.T) {
+	filter := "{\r\n  \"a\": [\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"vinay\"\r\n    },\r\n    {\r\n      \"o\": \"=\",\r\n      \"v\": \"kumar\"\r\n    }\r\n  ],\r\n  \"b\": [\r\n    {\r\n      \"o\": \"!=\",\r\n      \"v\": \"12\"\r\n    }\r\n  ],\r\n  \"c\": [\r\n    {\r\n      \"o\": \"in\",\r\n      \"v\": [\r\n        2.3,\r\n        4.2\r\n      ]\r\n    }\r\n  ]\r\n}"
+	m := MongoParser{}.Parse(filter)
+	j, err := json.Marshal(m)
+	if err == nil {
+		logrus.Infoln(string(j))
+	}
+}
+
+func TestSortToSql(*testing.T) {
+	sort := "{\"a\":\"asc\",\"b\":\"desc\"}"
+	m := SQLParser{}.Sort(sort)
+	j, err := json.Marshal(m)
+	if err == nil {
+		logrus.Infoln(string(j))
+	}
+}
+
+func TestSortToMongo(*testing.T) {
+	sort := "{\"a\":\"asc\",\"b\":\"desc\"}"
+	m := MongoParser{}.Sort(sort)
+	j, err := json.Marshal(m)
+	if err == nil {
+		logrus.Infoln(string(j))
+	}
+}
