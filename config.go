@@ -1,5 +1,6 @@
 package aql
 
+var sqlOpMap = make(map[string]string)
 var mongoOpMap = make(map[string]string)
 
 func initMap() {
@@ -12,4 +13,13 @@ func initMap() {
 	mongoOpMap["<="] = "$lte"
 	mongoOpMap["in"] = "$in"
 	mongoOpMap["nin"] = "$nin"
+}
+func initSQLMap() {
+	sqlOpMap["="] = " %s = '%v' "
+	sqlOpMap["!="] = " %s != '%v' "
+	sqlOpMap[">"] = " %s > '%v' "
+	sqlOpMap["<"] = " %s < '%v' "
+	sqlOpMap["<>"] = " %s <> '%v' "
+	sqlOpMap["<="] = " %s <= '%v' "
+	sqlOpMap[">="] = " %s >= '%v' "
 }
