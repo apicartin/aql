@@ -13,6 +13,7 @@ func initMap() {
 	mongoOpMap["<="] = "$lte"
 	mongoOpMap["in"] = "$in"
 	mongoOpMap["nin"] = "$nin"
+	mongoOpMap["like"] = "$regex"
 }
 func initSQLMap() {
 	sqlOpMap["="] = " %s = '%v' "

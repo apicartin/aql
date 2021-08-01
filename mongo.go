@@ -24,13 +24,24 @@ func (mp MongoParser) Parse(f string) interface{} {
 
 		if len(v) == 1 {
 			cri1 := v[0]
-			cond1 := bson.M{mongoOpMap[cri1.Operator]: handleInt64(cri1.Value)}
+			cond1 := bson.M{}
+			if cri1.Operator == "like" {
+				cond1 = bson.M{mongoOpMap[cri1.Operator]: handleInt64(cri1.Value), "$options": "i"}
+			} else {
+				cond1 = bson.M{mongoOpMap[cri1.Operator]: handleInt64(cri1.Value)}
+			}
+
 			andAr = append(andAr, bson.M{k: cond1})
 		} else if len(v) > 1 {
 			// add or conditions
 			orAr := []bson.M{}
 			for _, vc := range v {
-				cond2 := bson.M{mongoOpMap[vc.Operator]: handleInt64(vc.Value)}
+				cond2 := bson.M{}
+				if vc.Operator == "like" {
+					cond2 = bson.M{mongoOpMap[vc.Operator]: handleInt64(vc.Value), "$options": "i"}
+				} else {
+					cond2 = bson.M{mongoOpMap[vc.Operator]: handleInt64(vc.Value)}
+				}
 				orAr = append(orAr, bson.M{k: cond2})
 			}
 			andAr = append(andAr, bson.M{"$or": orAr})
